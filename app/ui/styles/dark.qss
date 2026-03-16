@@ -1,0 +1,84 @@
+* {
+    font-family: Segoe UI;
+    font-size: 14px;
+}
+
+QMainWindow {
+    background: #0f1115;
+}
+
+#TopTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #e8eaed;
+}
+
+#ThemeToggle {
+    background: #1b1f2a;
+    color: #e8eaed;
+    border: 1px solid #2a3142;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+#ThemeToggle:hover {
+    background: #23293a;
+}
+
+#PageTitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: #e8eaed;
+}
+
+#PageSubtitle {
+    color: #a9b1bd;
+}
+
+#Card {
+    background: #151a24;
+    border: 1px solid #263045;
+    border-radius: 14px;
+    padding: 14px;
+}
+
+#Input {
+    background: #0f1115;
+    color: #e8eaed;
+    border: 1px solid #2a3142;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#Input:focus {
+    border: 1px solid #5a7cff;
+}
+
+#PrimaryButton {
+    background: #5a7cff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-weight: 600;
+}
+
+#PrimaryButton:hover {
+    background: #4b6dff;
+}
+
+#SecondaryButton {
+    background: transparent;
+    color: #e8eaed;
+    border: 1px solid #2a3142;
+    border-radius: 10px;
+    padding: 10px 14px;
+}
+
+#SecondaryButton:hover {
+    background: #1b1f2a;
+}
+
+#ErrorLabel {
+    color: #ff6b6b;
+}
