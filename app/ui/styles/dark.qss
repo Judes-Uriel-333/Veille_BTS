@@ -1,84 +1,172 @@
+/* ============================
+   DARK MODE - Design System
+   ============================ */
+
 * {
-    font-family: Segoe UI;
+    font-family: "Segoe UI", sans-serif;
     font-size: 14px;
 }
 
+/* Base : fixe palette(text) pour tous les enfants */
+QWidget {
+    color: #e6edf3;
+}
+
 QMainWindow {
-    background: #0f1115;
+    background: #0d1117;
+}
+
+/* --- TOP BAR --- */
+#TopBar {
+    background: #161b22;
+    border-bottom: 1px solid #21262d;
 }
 
 #TopTitle {
     font-size: 18px;
-    font-weight: 600;
-    color: #e8eaed;
+    font-weight: 700;
+    color: #f0f3f6;
 }
 
 #ThemeToggle {
-    background: #1b1f2a;
-    color: #e8eaed;
-    border: 1px solid #2a3142;
-    border-radius: 10px;
-    padding: 8px;
-}
-
-#ThemeToggle:hover {
-    background: #23293a;
-}
-
-#PageTitle {
-    font-size: 22px;
-    font-weight: 700;
-    color: #e8eaed;
-}
-
-#PageSubtitle {
-    color: #a9b1bd;
-}
-
-#Card {
-    background: #151a24;
-    border: 1px solid #263045;
-    border-radius: 14px;
-    padding: 14px;
-}
-
-#Input {
-    background: #0f1115;
-    color: #e8eaed;
-    border: 1px solid #2a3142;
-    border-radius: 10px;
-    padding: 10px;
-}
-
-#Input:focus {
-    border: 1px solid #5a7cff;
-}
-
-#PrimaryButton {
-    background: #5a7cff;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 14px;
+    background: #21262d;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
     font-weight: 600;
 }
 
-#PrimaryButton:hover {
-    background: #4b6dff;
+#ThemeToggle:hover {
+    background: #30363d;
+    border-color: #484f58;
 }
 
+/* --- TITRES --- */
+#PageTitle {
+    font-size: 26px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+
+#PageSubtitle {
+    font-size: 14px;
+    color: #8b949e;
+    font-weight: 400;
+}
+
+/* --- CARTE --- */
+#Card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+}
+
+/* --- CHAMPS DE SAISIE --- */
+QLineEdit {
+    background: #0d1117;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    selection-background-color: #388bfd;
+}
+
+QLineEdit:focus {
+    border: 2px solid #58a6ff;
+    padding: 11px 15px;
+}
+
+QLineEdit:hover:!focus {
+    border-color: #484f58;
+}
+
+QLineEdit::placeholder {
+    color: #484f58;
+}
+
+/* --- BOUTON PRINCIPAL --- */
+#PrimaryButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4c8eff, stop:1 #3b7bef);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+#PrimaryButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #5c9aff, stop:1 #4c8eff);
+}
+
+#PrimaryButton:pressed {
+    background: #2563eb;
+}
+
+#PrimaryButton:disabled {
+    background: #21262d;
+    color: #484f58;
+}
+
+/* --- BOUTON SECONDAIRE --- */
 #SecondaryButton {
     background: transparent;
-    color: #e8eaed;
-    border: 1px solid #2a3142;
-    border-radius: 10px;
-    padding: 10px 14px;
+    color: #8b949e;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 11px 20px;
+    font-weight: 600;
+    font-size: 14px;
 }
 
 #SecondaryButton:hover {
-    background: #1b1f2a;
+    background: #21262d;
+    color: #e6edf3;
+    border-color: #484f58;
 }
 
+#SecondaryButton:pressed {
+    background: #161b22;
+}
+
+/* --- MESSAGES --- */
 #ErrorLabel {
-    color: #ff6b6b;
+    color: #f85149;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+#SuccessLabel {
+    color: #3fb950;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* --- SCROLL --- */
+QScrollArea {
+    background: transparent;
+    border: none;
+}
+
+QScrollBar:vertical {
+    background: transparent;
+    width: 8px;
+}
+
+QScrollBar::handle:vertical {
+    background: #30363d;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #484f58;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
 }

@@ -6,10 +6,6 @@ from app.ui.widgets.article_card import ArticleCard
 
 
 class RssWorker(QThread):
-    """
-    Worker pour exécuter la récupération RSS en arrière-plan sans bloquer l'UI.
-    C'est une excellente pratique technique (BTS SIO) de séparer les tâches lourdes du thread principal.
-    """
     finished = Signal()
     error = Signal(str)
 
@@ -29,120 +25,118 @@ class DashboardPage(QWidget):
         layout.setSpacing(20)
         layout.setContentsMargins(30, 30, 30, 30)
 
-        # Header Row
+        # Header
         header_layout = QHBoxLayout()
         header_text_layout = QVBoxLayout()
+
         title = QLabel("Dashboard Veille")
         title.setObjectName("PageTitle")
-        
-        subtitle = QLabel("Tes articles personnalisés, issus des meilleurs flux RSS.")
+
+        subtitle = QLabel("Tes articles, issus des meilleurs flux RSS.")
         subtitle.setObjectName("PageSubtitle")
-        subtitle.setStyleSheet("color: palette(text); font-size: 14px; opacity: 0.8;") 
-        
+
         header_text_layout.addWidget(title)
         header_text_layout.addWidget(subtitle)
-        
-        # Buttons Row
-        self.btn_refresh = QPushButton(" 🔄 Actualiser les articles")
+
+        # Boutons
+        self.btn_refresh = QPushButton("Actualiser les articles")
         self.btn_refresh.setObjectName("PrimaryButton")
+        self.btn_refresh.setMinimumHeight(44)
         self.btn_refresh.setCursor(Qt.PointingHandCursor)
         self.btn_refresh.clicked.connect(self.load_articles)
-        
-        btn_logout = QPushButton("Déconnexion")
+
+        btn_logout = QPushButton("Deconnexion")
         btn_logout.setObjectName("SecondaryButton")
+        btn_logout.setMinimumHeight(44)
         btn_logout.setCursor(Qt.PointingHandCursor)
         btn_logout.clicked.connect(on_logout)
-        
+
         buttons_layout = QVBoxLayout()
+        buttons_layout.setSpacing(8)
         buttons_layout.addWidget(self.btn_refresh)
         buttons_layout.addWidget(btn_logout)
-        
+
         header_layout.addLayout(header_text_layout)
         header_layout.addStretch()
         header_layout.addLayout(buttons_layout)
 
-        # Separator
+        # Separateur
         line = QFrame()
         line.setFrameShape(QFrame.HLine)
-        line.setFrameShadow(QFrame.Sunken)
-        line.setStyleSheet("background-color: palette(mid);")
+        line.setFrameShadow(QFrame.Plain)
+        line.setFixedHeight(1)
 
-        # --- Grid Area for Cards ---
+        # Grille d'articles
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setFrameShape(QScrollArea.NoFrame)
-        self.scroll_area.setStyleSheet("background: transparent;")
-        
+
         self.grid_container = QWidget()
-        self.grid_container.setStyleSheet("background: transparent;")
         self.grid_layout = QGridLayout(self.grid_container)
-        self.grid_layout.setSpacing(20)
+        self.grid_layout.setSpacing(16)
         self.grid_layout.setAlignment(Qt.AlignTop)
-        
+
         self.scroll_area.setWidget(self.grid_container)
 
         layout.addLayout(header_layout)
         layout.addWidget(line)
         layout.addWidget(self.scroll_area)
 
-        # Reference to avoid garbage collection of the thread
         self.worker = None
 
     def load_articles(self):
-        # UI state: loading
-        self.btn_refresh.setText("⏳ Chargement...")
+        self.btn_refresh.setText("Chargement...")
         self.btn_refresh.setEnabled(False)
-        
-        # Lancement de la tâche réseau dans un thread séparé
+
         self.worker = RssWorker()
         self.worker.finished.connect(self.on_rss_success)
         self.worker.error.connect(self.on_rss_error)
         self.worker.start()
-        
+
     def on_rss_success(self):
         self.display_grid()
         self.reset_button()
 
     def on_rss_error(self, error_msg):
-        QMessageBox.warning(self, "Erreur Réseau", f"Impossible de récupérer les flux RSS.\n{error_msg}")
-        # On affiche quand même la grille (potentiellement avec les articles du cache SQLite)
+        # Afficher les articles du cache meme en cas d'erreur reseau
         self.display_grid()
         self.reset_button()
-        
+        QMessageBox.warning(self, "Erreur Reseau",
+                            f"Certains flux RSS n'ont pas pu etre recuperes.\n{error_msg}")
+
     def reset_button(self):
-        self.btn_refresh.setText(" 🔄 Actualiser les articles")
+        self.btn_refresh.setText("Actualiser les articles")
         self.btn_refresh.setEnabled(True)
-        
+
     def display_grid(self):
-        # Clear existing layout
+        # Vider la grille existante
         while self.grid_layout.count():
             child = self.grid_layout.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
-                
+
         articles = get_articles()
-        
+
         if not articles:
-            empty_lbl = QLabel("Aucun article trouvé dans ton flux. Clique sur Actualiser.")
+            empty_lbl = QLabel("Aucun article. Clique sur Actualiser.")
             empty_lbl.setAlignment(Qt.AlignCenter)
-            empty_lbl.setStyleSheet("font-size: 16px; color: gray; margin-top: 50px;")
+            empty_lbl.setObjectName("PageSubtitle")
             self.grid_layout.addWidget(empty_lbl, 0, 0)
             return
 
-        cols = 2 # Fixed 2 columns grid
+        cols = 2
         row = 0
         col = 0
-        
+
         for article in articles:
             try:
                 card = ArticleCard(article)
                 card.setMinimumHeight(280)
                 self.grid_layout.addWidget(card, row, col)
-                
+
                 col += 1
                 if col >= cols:
                     col = 0
                     row += 1
             except Exception as e:
-                # Protection minimale : un article corrompu n'empêche pas l'affichage des autres
-                print(f"Erreur lors du rendu d'une carte ignorée : {e}")
+                print(f"[Dashboard] Erreur carte ignoree : {e}")
